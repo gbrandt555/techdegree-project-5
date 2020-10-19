@@ -33,6 +33,17 @@ def index():
 @app.route('/new.html', methods=['GET', 'POST'])
 def new_entry():
     form = forms.EntryForm()
+    if form.validate_on_submit():
+        flash("Entry successful!", "success")
+        models.Entry.create_entry(
+            journal_entry=form.journal_entry.data,
+            title_of_entry=form.title_of_entry.data,
+            date_of_entry=form.date_of_entry.default,
+            time_spent=form.date_of_entry.default,
+            what_you_learned=form.what_you_learned.data,
+            resources=form.resources.data
+        )
+        return redirect(url_for('index'))
     return render_template('new.html', form=form)
 
 

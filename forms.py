@@ -16,7 +16,7 @@ class EntryForm(Form):
         'Title',
         validators=[DataRequired()]
     )
-    date_of_entry = datetime.datetime.now
+    date_of_entry = DateTimeField(default=datetime.datetime.now)
     time_spent = DateTimeField(default=0)
     what_you_learned = StringField(
         'What you learned',
