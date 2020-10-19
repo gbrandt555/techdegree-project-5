@@ -7,7 +7,7 @@ DEBUG = True
 
 
 app = Flask(__name__)
-
+app.secret_key = 'dvsdf.,2.3,452fsdfoweifowihe0293.wefweom'
 
 @app.before_request
 def before_request():
@@ -24,14 +24,16 @@ def after_request(response):
     return response
 
 
-@app.route('/', methods='GET', 'POST')
-def entry():
+@app.route('/', methods=['GET', 'POST'])
+def index():
     form = forms.EntryForm()
-    if form.validate_on_submit():
-        flash("Entry successful!", "success")
-        models.Entry.create_entry()
-        return redirect(url_for('index'))
-    return render_template('')
+    return render_template('index.html', form=form)
+
+
+@app.route('/new.html', methods=['GET', 'POST'])
+def new_entry():
+    form = forms.EntryForm()
+    return render_template('new.html', form=form)
 
 
 if __name__ == '__main__':
@@ -39,7 +41,7 @@ if __name__ == '__main__':
     models.Entry.create_entry(
         journal_entry='First entry',
         title_of_entry='Welcome',
-        date_of_entry=datetime.datetime.now,
+        date_of_entry=datetime.datetime.now(),
         time_spent=1,
         what_you_learned='How to create a journal entry',
         resources='Treehouse'
