@@ -6,32 +6,31 @@ from peewee import *
 DATABASE = SqliteDatabase('journal.db')
 
 
-class Entry(Model):
-    journal_entry = CharField(unique=False)
-    title_of_entry = CharField(unique=False)
-    date_of_entry = DateTimeField(default=datetime.datetime.now)
-    time_spent = IntegerField(default=0)
-    what_you_learned = CharField(unique=False)
-    resources = CharField(unique=False)
+class Entries(Model):
+    title = CharField(max_length=150)
+    date = DateTimeField(default=datetime.datetime.now)
+    time_spent = CharField(max_length=20)
+    what_you_learned = TextField()
+    resources_used = TextField()
 
     class Meta:
         database = DATABASE
         order_by = ('-date_of_entry',)
 
     @classmethod
-    def create_entry(cls, journal_entry, title_of_entry, date_of_entry, time_spent, what_you_learned, resources):
-        cls.create(
-            journal_entry=journal_entry,
-            title_of_entry=title_of_entry,
-            date_of_entry=date_of_entry,
+    def create_entry(cls, title, date, time_spent, what_you_learned, resources_used):
+        entry = cls.create(
+            title=title,
+            date=date,
             time_spent=time_spent,
             what_you_learned=what_you_learned,
-            resources=resources
+            resources_used=resources_used,
         )
+        return entry.id
 
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([Entry], safe=True)
+    DATABASE.create_tables([Entries], safe=True)
     DATABASE.close()
 

@@ -24,37 +24,50 @@ def after_request(response):
     return response
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
-    form = forms.EntryForm()
-    return render_template('index.html', form=form)
+    entries = models.Entries.select()
+    return render_template('index.html', entries=entries)
 
 
-@app.route('/new.html', methods=['GET', 'POST'])
-def new_entry():
+@app.route('/entries')
+def entries():
+    return redirect(url_for('index'))
+
+
+@app.route('/entries/new', methods=['GET', 'POST'])
+def create_entry():
     form = forms.EntryForm()
     if form.validate_on_submit():
-        flash("Entry successful!", "success")
-        models.Entry.create_entry(
-            journal_entry=form.journal_entry.data,
-            title_of_entry=form.title_of_entry.data,
-            date_of_entry=form.date_of_entry.default,
-            time_spent=form.date_of_entry.default,
+        entry_id = models.Entries.create_entry(
+            title=form.title.data,
+            date=form.date.data,
+            time_spent=form.time_spent.data,
             what_you_learned=form.what_you_learned.data,
-            resources=form.resources.data
+            resources_used=form.resources_used.data,
         )
-        return redirect(url_for('index'))
+
+        return redirect(url_for('detail', entry_id=entry_id))
+
     return render_template('new.html', form=form)
+
+
+@app.route('/entries/<int:entry_id')
+def detail(entry_id):
+    try:
+        entry = models.Entries.select().where(
+            models.Entries.id == int(entry_id)
+        ).get()
+    except models.DoesNotExist:
+        pass
+
+    return render_template('details.html', entry=entry)
+
+
+
+
 
 
 if __name__ == '__main__':
     models.initialize()
-    models.Entry.create_entry(
-        journal_entry='First entry',
-        title_of_entry='Welcome',
-        date_of_entry=datetime.datetime.now(),
-        time_spent=1,
-        what_you_learned='How to create a journal entry',
-        resources='Treehouse'
-    )
     app.run(debug=DEBUG)
