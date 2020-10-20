@@ -35,6 +35,18 @@ def entries():
     return redirect(url_for('index'))
 
 
+@app.route('/entries/<int:entry_id')
+def detail(entry_id):
+    try:
+        entry = models.Entries.select().where(
+            models.Entries.id == int(entry_id)
+        ).get()
+    except models.DoesNotExist:
+        pass
+
+    return render_template('details.html', entry=entry)
+
+
 @app.route('/entries/new', methods=['GET', 'POST'])
 def create_entry():
     form = forms.EntryForm()
@@ -52,16 +64,7 @@ def create_entry():
     return render_template('new.html', form=form)
 
 
-@app.route('/entries/<int:entry_id')
-def detail(entry_id):
-    try:
-        entry = models.Entries.select().where(
-            models.Entries.id == int(entry_id)
-        ).get()
-    except models.DoesNotExist:
-        pass
 
-    return render_template('details.html', entry=entry)
 
 
 
