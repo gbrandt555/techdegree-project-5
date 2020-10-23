@@ -92,6 +92,16 @@ def edit_entry(id):
     )
 
 
+@app.route('/entries/<id>/delete')
+def delete_entry(id):
+    entry = models.Entries.get(models.Entries.id==int(id))
+    entry.delete_instance()
+    entry.save()
+    flash("Entry has been deleted")
+
+    return redirect(url_for('index'))
+
+
 
 
 
