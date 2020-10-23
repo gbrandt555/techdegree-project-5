@@ -7,11 +7,13 @@ DATABASE = SqliteDatabase('journal.db')
 
 
 class Entries(Model):
+    id = AutoField()
     title = CharField(max_length=150)
     date = DateTimeField(default=datetime.datetime.now)
     time_spent = CharField(max_length=20)
     what_you_learned = TextField()
     resources_used = TextField()
+    
 
     class Meta:
         database = DATABASE

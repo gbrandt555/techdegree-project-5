@@ -1,4 +1,4 @@
-from flask import Flask, g, render_template, flash, redirect, url_for
+from flask import Flask, g, render_template, flash, redirect, url_for, request
 
 import forms
 import models, datetime
@@ -35,7 +35,7 @@ def entries():
     return redirect(url_for('index'))
 
 
-@app.route('/entries/<int:entry_id')
+@app.route('/entries/<int:entry_id>')
 def detail(entry_id):
     try:
         entry = models.Entries.select().where(
@@ -44,12 +44,14 @@ def detail(entry_id):
     except models.DoesNotExist:
         pass
 
-    return render_template('details.html', entry=entry)
+    return render_template('detail.html', entry=entry)
 
 
 @app.route('/entries/new', methods=['GET', 'POST'])
 def create_entry():
-    form = forms.EntryForm()
+    
+    form = forms.EntryForm(request.form)
+    
     if form.validate_on_submit():
         entry_id = models.Entries.create_entry(
             title=form.title.data,
@@ -59,9 +61,35 @@ def create_entry():
             resources_used=form.resources_used.data,
         )
 
-        return redirect(url_for('detail', entry_id=entry_id))
+        return redirect(url_for('detail.html', entry_id=entry_id))
 
     return render_template('new.html', form=form)
+
+
+@app.route('/entries/<id>/edit')
+def edit_entry(id):
+    form = forms.EntryForm()
+    if form.validate_on_submit():
+        params = dict(
+            title=form.title.data,
+            date=form.date.data,
+            time_spent=form.time_spent.data,
+            what_you_learned=form.what_you_learned.data,
+            resources_used=form.resources_used.data,
+        )
+        models.Entries.update(**params).where(id==id).execute()
+
+        return redirect(url_for(f"/entries/{id}/edit"))
+    entry = models.Entries.select().where(
+            models.Entries.id == int(id)
+        ).get()
+    return render_template('edit.html', form=form, 
+                            title=entry.title, 
+                            date=entry.date, 
+                            time_spent=entry.time_spent, 
+                            what_you_learned=entry.what_you_learned, 
+                            resources_used=entry.resources_used
+    )
 
 
 
