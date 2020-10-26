@@ -28,7 +28,7 @@
                     <h2>Edit Entry</h2>
                     <form method='POST' action="{{ url_for('edit_entry', id=id) }}">
                         {{ form.csrf_token }}
-                        {{ render_field(form.title)}}
+                        {{ render_field(form.title) }}
                         {{ render_field(form.date) }}
                         {{ render_field(form.time_spent) }}
                         {{ render_field(form.what_you_learned) }}
