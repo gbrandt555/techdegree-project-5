@@ -31,8 +31,8 @@
                         {{ render_field(form.title, entry.title) }}
                         {{ render_field(form.date, entry.date.strftime('%Y-%m-%d')) }}
                         {{ render_field(form.time_spent, entry.time_spent) }}
-                        <textarea value="{{ entry.what_you_learned }}">{{ entry.what_you_learned }}</textarea>
-                        <textarea value="{{ entry.resources_used }}">{{ entry.resources_used }}</textarea>
+                        <textarea name="what_you_learned" value="{{ entry.what_you_learned }}">{{ entry.what_you_learned }}</textarea>
+                        <textarea name="resources_used" value="{{ entry.resources_used }}">{{ entry.resources_used }}</textarea>
                         <input type="submit", value="Submit", class="button">
                         <a href="{{ url_for('detail', entry_id=entry.id) }}" class="button">Cancel</a>
                     </form>
