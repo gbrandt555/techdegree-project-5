@@ -86,7 +86,6 @@ def edit_entry(id):
     return render_template('edit.html', form=form, entry=entry)
                             
 
-
 @app.route('/entries/<id>/delete', methods=['GET', 'POST'])
 def delete_entry(id):
     entry = models.Entries.get(models.Entries.id==int(id))
@@ -95,13 +94,6 @@ def delete_entry(id):
     flash("Entry has been deleted")
 
     return redirect(url_for('index'))
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
