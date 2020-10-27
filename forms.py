@@ -16,7 +16,7 @@ class EntryForm(FlaskForm):
         'Date (YYYY-MM-DD)',
     )
     time_spent = IntegerField(
-        'Time Spent',
+        'Time Spent (Hours)',
         validators=[DataRequired()]
     )
     what_you_learned = TextAreaField(

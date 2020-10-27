@@ -70,16 +70,15 @@ def create_entry():
 def edit_entry(id):
     form = forms.EntryForm()
     if form.validate_on_submit():
-        params = dict(
+        models.Entries.update(
             title=form.title.data,
             date=form.date.data,
             time_spent=form.time_spent.data,
             what_you_learned=form.what_you_learned.data,
             resources_used=form.resources_used.data,
         )
-        models.Entries.update(**params).where(id==id).execute()
 
-        return redirect(url_for(f"/entries/{id}/edit"))
+        return redirect(url_for('detail', entry_id=id))
     entry = models.Entries.select().where(
             models.Entries.id == int(id)
         ).get()
