@@ -16,7 +16,6 @@ def before_request():
     g.db.connect()
 
 
-
 @app.after_request
 def after_request(response):
     """Close Databse connection after each request"""
@@ -69,19 +68,25 @@ def create_entry():
 @app.route('/entries/<id>/edit', methods=['GET', 'POST'])
 def edit_entry(id):
     form = forms.EntryForm()
-    if form.validate_on_submit():
-        models.Entries.update(
-            title=form.title.data,
-            date=form.date.data,
-            time_spent=form.time_spent.data,
-            what_you_learned=form.what_you_learned.data,
-            resources_used=form.resources_used.data,
-        )
-
-        return redirect(url_for('detail', entry_id=id))
-    entry = models.Entries.select().where(
+    try:
+        entry = models.Entries.select().where(
             models.Entries.id == int(id)
         ).get()
+    except models.DoesNotExist:
+        pass
+
+    if form.validate_on_submit():
+        entry.title=form.title.data
+        entry.date=form.date.data
+        entry.time_spent=form.time_spent.data
+        entry.what_you_learned=form.what_you_learned.data
+        entry.resources_used=form.resources_used.data
+        entry.save()
+            
+            
+
+        return redirect(url_for('detail', entry_id=id))
+    
     return render_template('edit.html', form=form, entry=entry)
                             
 
