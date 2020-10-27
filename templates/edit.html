@@ -28,11 +28,11 @@
                     <h2>Edit Entry</h2>
                     <form method='POST' action="{{ url_for('edit_entry', id=entry.id) }}">
                         {{ form.csrf_token }}
-                        {{ render_field(form.title) }}
-                        {{ render_field(form.date) }}
-                        {{ render_field(form.time_spent) }}
-                        {{ render_field(form.what_you_learned) }}
-                        {{ render_field(form.resources_used) }}
+                        {{ render_field(form.title, entry.title) }}
+                        {{ render_field(form.date, entry.date) }}
+                        {{ render_field(form.time_spent, entry.time_spent) }}
+                        <textarea value="{{ entry.what_you_learned }}">{{ entry.what_you_learned }}</textarea>
+                        <textarea value="{{ entry.resources_used }}">{{ entry.resources_used }}</textarea>
                         <input type="submit", value="Submit", class="button">
                         <a href="{{ url_for('detail', entry_id=entry.id) }}" class="button">Cancel</a>
                     </form>
