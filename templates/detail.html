@@ -43,7 +43,7 @@
                             <ul>
                                 {% if entry.resources_used %}
                                     {% for text in entry.resources_used.split('\n') %}
-                                        <li>{{ text }}</li>
+                                        <li><a href="#">{{ text }}</a></li>
                                     {% endfor %}
                                 {% endif %}
                             </ul>

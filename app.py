@@ -83,8 +83,6 @@ def edit_entry(id):
         entry.resources_used=form.resources_used.data
         entry.save()
             
-            
-
         return redirect(url_for('detail', entry_id=id))
     
     return render_template('edit.html', form=form, entry=entry)
