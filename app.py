@@ -61,12 +61,12 @@ def create_entry():
             resources_used=form.resources_used.data,
         )
 
-        return redirect(url_for('detail.html', entry_id=entry_id))
+        return redirect(url_for('detail', entry_id=entry_id))
 
     return render_template('new.html', form=form)
 
 
-@app.route('/entries/<id>/edit')
+@app.route('/entries/<id>/edit', methods=['GET', 'POST'])
 def edit_entry(id):
     form = forms.EntryForm()
     if form.validate_on_submit():
@@ -83,16 +83,11 @@ def edit_entry(id):
     entry = models.Entries.select().where(
             models.Entries.id == int(id)
         ).get()
-    return render_template('edit.html', form=form, 
-                            title=entry.title, 
-                            date=entry.date, 
-                            time_spent=entry.time_spent, 
-                            what_you_learned=entry.what_you_learned, 
-                            resources_used=entry.resources_used
-    )
+    return render_template('edit.html', form=form, entry=entry)
+                            
 
 
-@app.route('/entries/<id>/delete')
+@app.route('/entries/<id>/delete', methods=['GET', 'POST'])
 def delete_entry(id):
     entry = models.Entries.get(models.Entries.id==int(id))
     entry.delete_instance()
